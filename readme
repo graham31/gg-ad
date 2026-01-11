@@ -1,0 +1,73 @@
+# Invoke-HardenedPrivEsc
+
+Hardened local Windows privilege escalation enumeration script with
+PowerUp-level accuracy and improved detection logic.
+
+This script performs **enumeration only**. It does **not** exploit or modify
+the target system.
+
+---
+
+## Features
+
+- SID-aware ACL checks using native .NET token data
+- Strict service binary path parsing (no guessing)
+- Environment variable expansion (%SystemRoot%, %ProgramFiles%, etc.)
+- Detection of:
+  - Writable service binaries
+  - Ghost services (missing binaries)
+  - Unquoted service path hijacks
+  - Ghost scheduled tasks
+  - Writable startup directories
+  - Modifiable service registry keys
+  - AlwaysInstallElevated misconfiguration
+- CIM-based enumeration (lower EDR noise than WMI)
+- Object-only output (automation and reporting friendly)
+
+---
+
+## Requirements
+
+- Windows operating system
+- PowerShell **5.1 or newer**
+- No external modules required
+- Administrator privileges **not required** (but will surface more findings)
+
+---
+
+## How to Run
+
+### 1. Save the script
+Save the file as:
+
+```text
+Invoke-HardenedPrivEsc.ps1
+
+
+4. Load the script into the session
+
+Navigate to the directory containing the script and run:
+
+. .\Invoke-HardenedPrivEsc.ps1
+
+
+Note: The leading dot (.) is required.
+
+5. Run the enumeration
+Invoke-HardenedPrivEsc
+6. Optional: Interactive UI (not stealthy)
+
+Displays results using a graphical grid view:
+
+Invoke-HardenedPrivEsc -ShowUI
+
+
+⚠ This uses Out-GridView and may be blocked in hardened environments.
+
+
+7. Export results (recommended)
+JSON (best for reporting / automation)
+Invoke-HardenedPrivEsc | ConvertTo-Json -Depth 6 | Out-File results.json
+
+CSV
+Invoke-HardenedPrivEsc | Export-Csv results.csv -NoTypeInformation
